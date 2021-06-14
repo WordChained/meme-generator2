@@ -27,6 +27,10 @@ function resizeCanvas() {
     gCanvas.width = elContainer.offsetWidth
     gCanvas.height = elContainer.offsetHeight
     renderCanvas()
+    openModal({
+        x: gCanvas.width / 2,
+        y: gCanvas.height / 4
+    })
 }
 
 function loadImgToCanvas() {
@@ -82,6 +86,7 @@ function onDown(ev) {
 function onMove(ev) {
     const text = gCurrText;
     if (text.isDrag) {
+
         const pos = getEvPos(ev)
         const dx = pos.x - gStartPos.x
         const dy = pos.y - gStartPos.y
@@ -105,7 +110,10 @@ function onMove(ev) {
 function onUp() {
     setTextDrag(false)
     document.querySelector('.canvas').style.cursor = 'grab'
-    renderCanvas()
+    gIsEditing = true;
+    setTimeout(() => {
+        gCtx.strokeRect(gCurrText.pos.x - 175, gCurrText.pos.y - 50, 350, 70);
+    }, 0);
 }
 
 function getEvPos(ev) {
@@ -125,6 +133,8 @@ function getEvPos(ev) {
 }
 
 function isTextClicked(clickedPos) {
+    if (!gCurrText.pos) return false
+    console.log(clickedPos)
     var textWidth = gCtx.measureText(gCurrText.txt).width
     const { pos } = gCurrText
     if (clickedPos.x >= pos.x - textWidth / 2 && clickedPos.x <= pos.x + textWidth / 2 && clickedPos.y >= pos.y - gSize && clickedPos.y <= pos.y) {
@@ -146,19 +156,22 @@ function openModal(canvasClickPos) {
     // elModal.focus()
     var elModal = document.querySelector('.modal');
     elModal.style.display = 'block';
-    elModal.style.left = canvasClickPos.x + 'px';
-    elModal.style.top = canvasClickPos.y + 'px';
+    elModal.style.left = canvasClickPos.x - 150 + 'px';
+    elModal.style.top = canvasClickPos.y + 100 + 'px';
 }
 
 function closeModal() {
     var elModal = document.querySelector('.modal')
     elModal.style.display = 'none';
+    gClickPos = false;
+    gMeme.selectedLineIdx = gMeme.lines.length
 }
 
 function getTextBoxPos(ev) {
+    console.log(ev);
     var pos = {
-        x: ev.clientX - 400,
-        y: ev.clientY - 170
+        x: ev.clientX - 100,
+        y: ev.clientY - 270
     }
     if (gTouchEvs.includes(ev.type)) {
         ev.preventDefault()
@@ -175,7 +188,7 @@ function getTextBoxPos(ev) {
     }
     gClickPos = {
         x: pos.x,
-        y: pos.y - 100
+        y: pos.y
     };
     return pos
 }

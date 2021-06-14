@@ -2,7 +2,7 @@
 
 //service for general functions and globals
 
-
+var gWindowClickPos;
 var gCurrText = {};
 var gIsEditing = false;
 var gAlignment = 'center'
@@ -164,4 +164,8 @@ function getMemeList() {
     gMemeList = loadFromStorage('memeList')
     gMemeList.push(gCanvas.toDataURL())
     return gMemeList
+}
+
+function printWindowMousePos() {
+
 }

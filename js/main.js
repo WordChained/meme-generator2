@@ -19,10 +19,6 @@ function onInit() {
     addListeners()
     loadImgToCanvas();
     resizeCanvas()
-    openModal({
-        x: gCanvas.width / 2,
-        y: gCanvas.height / 4
-    })
 }
 
 function OnTextPick(ev) {
@@ -33,12 +29,12 @@ function OnTextPick(ev) {
 // when we type
 function onTextInput(text) {
     setUserText(text)
+
 }
 
 //when we hit enter
 function onSubmitText(ev, input, ) {
     submitText(ev, input)
-
 }
 
 function onSizeChange(elSize) {

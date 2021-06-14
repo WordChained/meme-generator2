@@ -5,7 +5,6 @@ function submitText(ev, input) {
         ev.preventDefault();
         if (!gIsEditing) {
             drawText(input.value);
-            closeModal()
             gMeme.selectedLineIdx++;
         } else {
             editText(input.value)
@@ -16,24 +15,29 @@ function submitText(ev, input) {
 }
 
 function drawText(text, x = gCanvas.width / 2, y) {
-    var elModal = document.querySelector('.modal');
-    if (elModal.style.display === 'block') {
+    if (gClickPos) {
         x = gClickPos.x;
         y = gClickPos.y
     }
+
+    var nextPos = {};
     if (!y) {
         switch (gMeme.selectedLineIdx) {
             case 0:
                 y = gCanvas.height / 4;
+                nextPos = { x: x, y: gCanvas.height - 50 }
                 break;
             case 1:
                 y = gCanvas.height - 50;
+                nextPos = { x: x, y: gCanvas.height / 2 }
                 break;
             case 2:
                 y = gCanvas.height / 2;
+                nextPos = { x: x, y: gCanvas.height - 100 }
                 break;
             default:
                 y = gCanvas.height - 100;
+                nextPos = { x: x, y: y }
                 break;
         }
     }
@@ -61,6 +65,9 @@ function drawText(text, x = gCanvas.width / 2, y) {
         },
         isDrag: false
     }
+    closeModal()
+    openModal(nextPos)
+
 }
 
 function deleteLine() {
@@ -72,7 +79,6 @@ function deleteLine() {
 
 function deleteCurrLine() {
     gMeme.lines.splice((gCurrText.id), 1)
-    console.log(gMeme.lines);
     gMeme.selectedLineIdx -= 1;
     if (gMeme.selectedLineIdx < 0) gMeme.selectedLineIdx = 3
     renderCanvas()
